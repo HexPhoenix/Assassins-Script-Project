@@ -97,7 +97,7 @@ public class TargetHandler : MonoBehaviour
     {
         AnguillaTriggerExit();
         obstacleRacePrompt.gameObject.SetActive(true);
-        //audioManager.PlaySFX(audioManager.selection);
+        audioManager.PlaySFX(audioManager.selection);
     }
     // -------------------------------------------------------------------- //
     //Funzione di start del minigioco
@@ -182,7 +182,7 @@ public class TargetHandler : MonoBehaviour
                 {
                 Debug.Log("Attraversato primo anello");
                     StartCoroutine(Timer());
-                    //audioManager.PlaySFX(audioManager.startRace);
+                    audioManager.PlaySFX(audioManager.startRace);
 
             }
                 if(targetNumber >= 28)
@@ -190,13 +190,13 @@ public class TargetHandler : MonoBehaviour
                     Victory();
                     StopCoroutine(Timer());
                     timer.gameObject.SetActive(false);
-                    //audioManager.PlaySFX(audioManager.endRace);
+                    audioManager.PlaySFX(audioManager.endRace);
                     return;
                 }
                 GameObject.Find(nextTargetName).GetComponent<MeshRenderer>().material = activeMaterial;
                 if(targetNumber > 0 && targetNumber < 28)
                 {
-                    //audioManager.PlaySFX(audioManager.crossRing);
+                    audioManager.PlaySFX(audioManager.crossRing);
                 }
 
             targetNumber++;
