@@ -18,10 +18,12 @@ public class TargetHandler : MonoBehaviour
 
     private Rigidbody rb;
 
-    private Transform obstacleRacePrompt;
+    private Transform obstacleRacePrompt,theSummonPrompt;
     private TextMeshProUGUI NPCName, dialogueText, rewardsText, timer;
     private Button confirmButton, cancelButton;
 
+    [SerializeField] private GameObject soundtrack;
+    private AudioSource source;
     private AudioManager audioManager;
 
     private void Awake()
@@ -33,6 +35,8 @@ public class TargetHandler : MonoBehaviour
 
         obstacleRacePrompt = canvas.transform.Find("ObstacleRacePrompt");
         obstacleRacePrompt.gameObject.SetActive(false);
+        theSummonPrompt = canvas.transform.Find("TheSummonPrompt");
+        theSummonPrompt.gameObject.SetActive(false);
         NPCName = canvas.transform.Find("DialoguePanel/TitlePanel/NPCName").gameObject.GetComponent<TextMeshProUGUI>();
         dialogueText = canvas.transform.Find("DialoguePanel/DialogueText").gameObject.GetComponent<TextMeshProUGUI>();
         canvas.transform.Find("DialoguePanel").gameObject.SetActive(false);
@@ -40,9 +44,10 @@ public class TargetHandler : MonoBehaviour
         cancelButton = canvas.transform.Find("DialoguePanel/CancelButton").gameObject.GetComponent<Button>();
         timer = canvas.transform.Find("Timer").gameObject.GetComponent<TextMeshProUGUI>();
 
-        //audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        source = soundtrack.GetComponent<AudioSource>();
 
-        
+
     }
     // -------------------------------------------------------------------- //
     //Funzioni chiamate all'interno di TurtleController per gestire il dialogo con l'anguilla
@@ -85,8 +90,8 @@ public class TargetHandler : MonoBehaviour
         canvas.transform.Find("DialoguePanel").gameObject.SetActive(false);
         obstacleRacePrompt.gameObject.SetActive(false);
         canvas.transform.Find("BarsPanel").gameObject.SetActive(true);
+        audioManager.ChangeMusic(audioManager.MatteoGameSountrack);
         raceStart();
-        //audioManager.PlaySFX(audioManager.selection);
     }
     public void CancelButton_onClick()
     {
@@ -234,15 +239,17 @@ public class TargetHandler : MonoBehaviour
     //Shhhh...
     public void summonSpecialTarget()
     {
-        if(Input.GetKey(KeyCode.E))
+        theSummonPrompt.gameObject.SetActive(true);
+        if (Input.GetKey(KeyCode.E))
         {
+            theSummonPrompt.gameObject.SetActive(false);
             audioManager.PlaySFX(audioManager.Crush_Spawn);
             StartCoroutine(summoningRitual());
         }
     }
     public IEnumerator summoningRitual()
     {
-        audioManager.soundtrack.GetComponent<AudioSource>().volume = 0.01f;
+        source.volume = 0.05f;
         GameObject Scorza = GameObject.Find("SpecialTarget");
         Scorza.GetComponentInChildren<MeshRenderer>().enabled = true;
         while (Scorza.transform.position.y>40)
@@ -250,7 +257,7 @@ public class TargetHandler : MonoBehaviour
             Scorza.transform.position = Vector3.MoveTowards(Scorza.transform.position, new Vector3(57, 40, 530), Time.deltaTime * 1.5f);
             yield return new WaitForFixedUpdate();
         }
-        audioManager.soundtrack.GetComponent<AudioSource>().volume = 0.2f;
+        source.volume = 0.2f;
     }
 
 
